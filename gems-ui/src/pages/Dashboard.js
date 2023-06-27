@@ -1,12 +1,12 @@
 import { useSelector } from "react-redux"
-
+import { userInfoSelector } from "../reducers/loginSlice"
 const Dashboard = () => {
 
-    const userInfo = useSelector((state) => state.userInfo)
+    const userInfo = useSelector(userInfoSelector)
 
     return (
         <>
-            <h2>Hello {userInfo.username}</h2>
+            <h2>Hello {userInfo.email}</h2>
         </>
     )
 }

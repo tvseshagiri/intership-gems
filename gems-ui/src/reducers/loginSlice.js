@@ -1,19 +1,23 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import AuthApi from "../services/AuthApi";
+import { useSelector } from "react-redux";
 
 const initialState = {
-    userInfo: {},
-    token: '',
-    message: {}
+    userInfo: {
+        email: null,
+        role: null
+    },
+    token: null,
+    message: null
 }
 
+export const userInfoSelector = state => state.login.userInfo;
+export const messageSelector = state => state.login.message;
 
 export const validateUser = createAsyncThunk(
     'login/validateUser',
     async ({ username, password }) => {
-        console.log('In createAsyncThunk')
         const resp = await AuthApi.validateUser(username, password);
-        console.log('Response data' + resp.data)
         return resp.data;
     }
 )
@@ -22,33 +26,23 @@ export const loginSlice = createSlice({
     name: 'login',
     initialState,
     reducers: {
-
-        performLogin: (state, action) => {
-            const { username, password } = action.payload;
-            console.log(username, password)
-            if (validateUser(username, password)) {
-
-                state.userInfo = {
-                    username: 'rama',
-                    role: 'Admin'
-                }
-            } else {
-                state.message = 'Login Failed'
-            }
+        resetMessage(state, action) {
+            state.message = null;
         }
     },
     extraReducers: (builder) => {
         builder.addCase(validateUser.fulfilled, (state, action) => {
-            console.log(action)
-            state.userInfo = {
-                email: action.payload.email,
-                role: action.payload.email,
-            },
-                state.token = action.payload.token;
-            console.log(state.token)
+
+            state.userInfo.email = action.payload.user.email;
+            state.userInfo.role = action.payload.user.role;
+            state.token = action.payload.token
+
+        }).addCase(validateUser.rejected, (state, action) => {
+            state.message = 'Invalid Credentials'
+            console.log(action.payload);
         })
     }
 })
 
-export const { performLogin } = loginSlice.actions;
+export const { resetMessage } = loginSlice.actions;
 export default loginSlice.reducer;
