@@ -1,0 +1,60 @@
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import AuthApi from "../services/AuthApi";
+
+const initialState = {
+    userInfo: {
+        firstName: null,
+        secondName: null,
+        division: null,
+        email: null,
+        role: null
+    },
+    message: null
+}
+
+export const userInfoSelector = state => state.login.userInfo;
+export const messageSelector = state => state.login.message;
+
+export const validateUser = createAsyncThunk(
+    'login/validateUser',
+    async ({ username, password }) => {
+        const resp = await AuthApi.validateUser(username, password);
+        return resp.data;
+    }
+)
+
+export const loginSlice = createSlice({
+    name: 'login',
+    initialState,
+    reducers: {
+        resetMessage(state, action) {
+            state.message = null;
+        },
+        setMessage(state, action) {
+            state.message = action.payload.message;
+        },
+        logoutUser(state) {
+            state.userInfo = null;
+            state.message = null;
+            localStorage.clear();
+        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(validateUser.fulfilled, (state, action) => {
+
+            state.userInfo.email = action.payload.user.email;
+            state.userInfo.role = action.payload.user.role;
+            state.userInfo.firstName = action.payload.user.firstName;
+            state.userInfo.lastName = action.payload.user.lastName;
+            state.userInfo.division = action.payload.user.division;
+            localStorage.setItem('token', action.payload.token)
+
+        }).addCase(validateUser.rejected, (state, action) => {
+            state.message = 'Invalid Credentials'
+            console.log(action.payload);
+        })
+    }
+})
+
+export const { resetMessage, setMessage, logoutUser } = loginSlice.actions;
+export default loginSlice.reducer;

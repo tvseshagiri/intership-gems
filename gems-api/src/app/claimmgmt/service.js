@@ -1,15 +1,10 @@
-
-claims = [
-    { claimID: 'CLM-TRL-4234342', claimBy: 'Seshagiri', amount: 4534.33, category: 'Travel', subCategory: 'domestic' },
-    { claimID: 'CLM-ENT-4534342', claimBy: 'Vennela', amount: 7987.33, category: 'Entertainment', subCategory: 'Team Lunch' },
-    { claimID: 'CLM-ENT-4335342', claimBy: 'Nanda', amount: 17987.33, category: 'Entertainment', subCategory: 'Team Lunch' },
-]
+const { User } = require('../models')
 
 
-function getClaims() {
+async function getClaims(email) {
 
-    return claims;
-
+    const user = await User.findOne({ email: email }).exec()
+    return user ? user.claims : []
 }
 
 function saveClaim(claim) {
