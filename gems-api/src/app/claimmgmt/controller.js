@@ -1,11 +1,9 @@
 const service = require('./service')
 
-function getClaims(req, res, next) {
-
-    console.log('Claims for User:' + JSON.stringify(req.user))
+async function getClaims(req, res, next) {
 
     try {
-        const claims = service.getClaims();
+        const claims = await service.getClaims(req.user.email);
         res.json(claims);
 
     } catch (err) {

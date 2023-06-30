@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { messageSelector, resetMessage, validateUser } from '../reducers/loginSlice'
+import { messageSelector, resetMessage, validateUser, setMessage } from '../reducers/loginSlice'
 
 import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
@@ -25,7 +25,7 @@ const Login = () => {
             await dispatch(validateUser({ username, password })).unwrap()
             navigate('/dashboard')
         } catch (error) {
-            alert('Error in loginpage' + JSON.stringify(error));
+            setMessage('System Error, Please try after sometime')
         }
     }
 
@@ -46,16 +46,6 @@ const Login = () => {
                 <TextField label='Username' value={username} onChange={(e) => { setUsername(e.target.value) }} placeholder='Enter username' variant="outlined" fullWidth required />
                 <TextField label='Password' onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter password' type='password' variant="outlined" fullWidth required />
                 <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth onClick={() => submitLoign()}>Sign in</Button>
-                <Typography >
-                    <Link href="#" >
-                        Forgot password ?
-                    </Link>
-                </Typography>
-                <Typography > Do you have an account ?
-                    <Link href="#" >
-                        Sign Up
-                    </Link>
-                </Typography>
             </Paper>
         </Grid>
     )

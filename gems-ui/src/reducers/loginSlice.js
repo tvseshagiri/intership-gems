@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import AuthApi from "../services/AuthApi";
-import { useSelector } from "react-redux";
 
 const initialState = {
     userInfo: {
+        firstName: null,
+        secondName: null,
+        division: null,
         email: null,
         role: null
     },
-    token: null,
     message: null
 }
 
@@ -28,6 +29,14 @@ export const loginSlice = createSlice({
     reducers: {
         resetMessage(state, action) {
             state.message = null;
+        },
+        setMessage(state, action) {
+            state.message = action.payload.message;
+        },
+        logoutUser(state) {
+            state.userInfo = null;
+            state.message = null;
+            localStorage.clear();
         }
     },
     extraReducers: (builder) => {
@@ -35,7 +44,10 @@ export const loginSlice = createSlice({
 
             state.userInfo.email = action.payload.user.email;
             state.userInfo.role = action.payload.user.role;
-            state.token = action.payload.token
+            state.userInfo.firstName = action.payload.user.firstName;
+            state.userInfo.lastName = action.payload.user.lastName;
+            state.userInfo.division = action.payload.user.division;
+            localStorage.setItem('token', action.payload.token)
 
         }).addCase(validateUser.rejected, (state, action) => {
             state.message = 'Invalid Credentials'
@@ -44,5 +56,5 @@ export const loginSlice = createSlice({
     }
 })
 
-export const { resetMessage } = loginSlice.actions;
+export const { resetMessage, setMessage, logoutUser } = loginSlice.actions;
 export default loginSlice.reducer;
