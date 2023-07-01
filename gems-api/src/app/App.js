@@ -20,4 +20,10 @@ preparePassport()
 
 app.use('/api', passport.authenticate('jwt', { session: false }), [claimRutr]);
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Error while processing the request')
+})
+
 module.exports = app
