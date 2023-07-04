@@ -29,10 +29,6 @@ const Login = () => {
         }
     }
 
-    async function clearMessage() {
-        await dispatch(resetMessage())
-    }
-
     return (
         <Grid>
             <Paper elevation={10} style={paperStyle}>

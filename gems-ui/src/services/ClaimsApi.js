@@ -1,9 +1,7 @@
 
 import api from './httpCommon';
 
-
-const getClaims = async () => {
-
+function getHeaders() {
     const token = localStorage.getItem('token')
 
     // For now, if no token, means user not authenticated, hence returning empty array and 
@@ -17,12 +15,26 @@ const getClaims = async () => {
         "Authorization": `Bearer ${token}`
 
     }
-    const resp = await api.get('/api/claims', { headers: headers })
-    return resp.data
+    return headers;
+}
+
+const getClaims = async () => {
+    const resp = await api.get('/api/claims', { headers: getHeaders() })
+    return resp.data;
+}
+
+const saveClaim = (claim) => {
+    return api.post('/api/claims', claim, { headers: getHeaders() })
+}
+
+const deleteClaim = (claimid) => {
+    return api.delete(`/api/claims/${claimid}`, { headers: getHeaders() })
 }
 
 const ClaimApi = {
-    getClaims
+    getClaims,
+    saveClaim,
+    deleteClaim
 }
 
 export default ClaimApi;

@@ -8,7 +8,7 @@ import { NewClaimPage } from '../pages/NewClaimPage'
 import { EditClaimPage } from '../pages/EditClaimPage'
 
 const loadClaims = async () => {
-    return ClaimApi.getClaims();
+    return await ClaimApi.getClaims();
 }
 
 export const router = createBrowserRouter([
