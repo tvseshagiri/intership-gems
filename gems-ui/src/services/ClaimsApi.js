@@ -31,10 +31,22 @@ const deleteClaim = (claimid) => {
     return api.delete(`/api/claims/${claimid}`, { headers: getHeaders() })
 }
 
+const getClaimById = async (claimid) => {
+    const resp = await api.get(`/api/claims/${claimid}`, { headers: getHeaders() })
+    return resp.data
+}
+
+const getUnsettledClaims = async () => {
+    const resp = await api.get(`/api/unsettledclaims`, { headers: getHeaders() })
+    return resp.data
+}
+
 const ClaimApi = {
     getClaims,
     saveClaim,
-    deleteClaim
+    deleteClaim,
+    getClaimById,
+    getUnsettledClaims
 }
 
 export default ClaimApi;

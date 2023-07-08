@@ -32,7 +32,11 @@ const claimsSchema = new mongoose.Schema({
         default: 'Generated'
     },
     generatedOn: Date,
-    ownerEmail: String,
+    owner: {
+        type: mongoose.ObjectId,
+        ref: 'User',
+        index: true
+    },
     approvedBy: String,
     approvedOn: Date
 }, opts)
@@ -60,8 +64,6 @@ const userSchema = new mongoose.Schema({
     lastName: String,
     email: {
         type: String,
-        index: true,
-        unique: true
     },
     password: String,
     role: {
@@ -75,12 +77,13 @@ const userSchema = new mongoose.Schema({
         default: 'Sales'
     },
     claims: {
-        type: [claimsSchema]
+        type: [mongoose.ObjectId],
+        ref: 'Claim'
     }
 }, opts)
 
 const User = mongoose.model('User', userSchema)
-const Claim = mongoose.model('Claim', userSchema)
+const Claim = mongoose.model('Claim', claimsSchema)
 
 module.exports = {
     User,

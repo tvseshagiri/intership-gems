@@ -12,7 +12,11 @@ const columns = [
     { field: 'amount', headerName: 'Amount', width: 150 },
     { field: 'generatedOn', headerName: 'Claim Date', width: 150 },
     { field: 'status', headerName: 'Status', width: 150 },
-    { field: 'ownerEmail', headerName: 'Raised By', width: 150 },
+    {
+        field: 'owner', headerName: 'Raised By', width: 150, renderCell: (params) => {
+            return <div className="rowitem">{params.row.owner.firstName}, {params.row.owner.lastName}</div>;
+        }
+    },
 ];
 
 const Dashboard = () => {
@@ -40,10 +44,27 @@ const Dashboard = () => {
             try {
                 await dispatch(deleteClaim(selectedRow['_id'])).unwrap()
                 let latestClaims = await dispatch(getClaims()).unwrap()
+                console.log(latestClaims)
                 setClaims(latestClaims);
             } catch (err) {
                 alert(`Error while creating claim. ${err.message}`)
             }
+        }
+
+    }
+
+    async function callEditClaim() {
+        let selectedRow = null;
+        const selectRows = apiRef.current.getSelectedRows();
+        if (selectRows.size == 0) {
+            alert('Please select a claim to delete');
+        } else {
+
+            selectRows.forEach((row, rowId) => {
+                selectedRow = row;
+            })
+
+            navigate(`/editclaim/${selectedRow['_id']}`)
         }
 
     }
@@ -56,7 +77,7 @@ const Dashboard = () => {
                     <Button size="small" onClick={() => navigateToClaimPage()}>
                         Create Claim
                     </Button>
-                    <Button size="small" onClick={() => alert('Coming soon')}>
+                    <Button size="small" onClick={() => callEditClaim()}>
                         Edit Claim
                     </Button>
                     <Button size="small" onClick={() => callDeleteClaim()}>

@@ -59,9 +59,7 @@ export function NewClaimPage() {
         <>
             <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
                 <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-                    <Typography component="h1" variant="h4" align="center">
-                        New Claim
-                    </Typography>
+                    <h2>New Claim</h2>
                     {message}
                     <Grid container spacing={3}>
                         <Grid item xs={12} >
@@ -102,8 +100,8 @@ export function NewClaimPage() {
                                 name="amount"
                                 label="Claim Amount"
                                 fullWidth
-                                variant="standard"
-                                onBlur={(e) => { setClaim({ ...claim, amount: parseInt(e.target.value) }) }}
+                                variant="outlined"
+                                onChange={(e) => { setClaim({ ...claim, amount: parseInt(e.target.value) }) }}
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
