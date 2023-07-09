@@ -14,6 +14,14 @@ export const getClaims = createAsyncThunk(
     }
 )
 
+export const getUnsettledClaims = createAsyncThunk(
+    'claim/getUnsettledClaims',
+    async () => {
+        const resp = await ClaimApi.getUnsettledClaims()
+        return resp
+    }
+)
+
 export const saveClaim = createAsyncThunk(
     'claim/createClaim',
     async (claim) => {
@@ -30,6 +38,13 @@ export const deleteClaim = createAsyncThunk(
     }
 )
 
+export const updateClaim = createAsyncThunk(
+    'claim/updateClaim',
+    async (claimFormData) => {
+        const resp = await ClaimApi.updateClaim(claimFormData);
+        return resp.data;
+    }
+)
 
 
 const claimSlice = createSlice({

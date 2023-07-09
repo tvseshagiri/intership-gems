@@ -33,7 +33,7 @@ async function deleteClaim(claimId, userEmail) {
 
 async function getClaimById(claimId) {
 
-    const claim = Claim.findById(claimId).populate(path = 'owner', select = 'firstName lastName email')
+    const claim = Claim.findById(claimId).populate({ path: 'owner', select: 'firstName lastName email' }).exec()
     //console.log('Claim:' + JSON.stringify(claim))
     return claim;
 
@@ -56,10 +56,58 @@ async function getUnsettledClaimsByDivision(division, currentUserEmail) {
 
 }
 
+async function updateClaim(claim) {
+
+    console.log(`Got Claim data as: ${JSON.stringify(claim)}`)
+
+    let claimDoc = await Claim.findById(claim._id).exec()
+    if (claimDoc) {
+
+        if (claimDoc.status != claim.status) {
+            claimDoc.status = claim.status;
+        }
+        if (claimDoc.type != claim.type) {
+            claimDoc.type = claim.type;
+        }
+        if (claimDoc.subType != claim.subType) {
+            claimDoc.subType = claim.subType;
+        }
+        if (claimDoc.amount != claim.amount) {
+            claimDoc.amount = claim.amount;
+        }
+        await claimDoc.save()
+    } else {
+        throw Error('No Claim with the specified ID')
+    }
+}
+
+async function updateClaimForApprover(claim, approverEmail) {
+
+    let claimDoc = await Claim.findById(claim._id).exec()
+    if (claimDoc) {
+
+        if (claimDoc.status != claim.status) {
+            claimDoc.status = claim.status;
+        }
+        if (['Approved', 'Rejected'].includes(claimDoc.status)) {
+            claimDoc.approvedBy = approverEmail;
+            claimDoc.approvedOn = Date.now()
+        }
+        if (claim.comments) {
+            claimDoc.comments = claim.comments;
+        }
+        await claimDoc.save()
+    } else {
+        throw Error('No Claim with the specified ID')
+    }
+}
+
 module.exports = {
     getClaims,
     saveClaim,
     deleteClaim,
     getClaimById,
-    getUnsettledClaimsByDivision
+    getUnsettledClaimsByDivision,
+    updateClaim,
+    updateClaimForApprover
 }

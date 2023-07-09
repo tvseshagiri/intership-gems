@@ -1,9 +1,10 @@
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { Button, Stack } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { deleteClaim, getClaims } from '../reducers/claimSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { deleteClaim, getClaims, getUnsettledClaims } from '../reducers/claimSlice';
 import { useState } from 'react';
+import { userInfoSelector } from "../reducers/loginSlice";
 
 const columns = [
     { field: 'number', headerName: 'Claim Number', width: 150 },
@@ -25,6 +26,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const apiRef = useGridApiRef();
     const dispatch = useDispatch()
+    const userInfo = useSelector(userInfoSelector)
 
     function navigateToClaimPage() {
         navigate('/newclaim');
@@ -40,14 +42,22 @@ const Dashboard = () => {
             selectRows.forEach((row, rowId) => {
                 selectedRow = row;
             })
-            //alert(JSON.stringify(selectedRow))
-            try {
-                await dispatch(deleteClaim(selectedRow['_id'])).unwrap()
-                let latestClaims = await dispatch(getClaims()).unwrap()
-                console.log(latestClaims)
-                setClaims(latestClaims);
-            } catch (err) {
-                alert(`Error while creating claim. ${err.message}`)
+            if (userInfo.email != selectedRow.owner.email) {
+                alert('You cant delete this claim');
+                return;
+            } else {
+                try {
+                    await dispatch(deleteClaim(selectedRow['_id'])).unwrap()
+                    let latestClaims = await dispatch(getClaims()).unwrap()
+                    if (userInfo.role === 'BudgetOwner') {
+                        let unsettledClaims = await dispatch(getUnsettledClaims()).unwrap()
+                        latestClaims = latestClaims.concat(unsettledClaims)
+                    }
+                    setClaims(latestClaims);
+                } catch (err) {
+                    console.log(err)
+                    alert(`Error while Deleting claim. ${err.message}`)
+                }
             }
         }
 

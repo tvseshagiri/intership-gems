@@ -100,6 +100,7 @@ export function NewClaimPage() {
                                 name="amount"
                                 label="Claim Amount"
                                 fullWidth
+                                type="number"
                                 variant="outlined"
                                 onChange={(e) => { setClaim({ ...claim, amount: parseInt(e.target.value) }) }}
                             />

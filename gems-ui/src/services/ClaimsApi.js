@@ -41,12 +41,18 @@ const getUnsettledClaims = async () => {
     return resp.data
 }
 
+const updateClaim = async (claimFormData) => {
+    const resp = await api.put(`/api/claims/${claimFormData._id}`, claimFormData, { headers: getHeaders() })
+    return resp.data
+}
+
 const ClaimApi = {
     getClaims,
     saveClaim,
     deleteClaim,
     getClaimById,
-    getUnsettledClaims
+    getUnsettledClaims,
+    updateClaim
 }
 
 export default ClaimApi;

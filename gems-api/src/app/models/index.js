@@ -38,7 +38,16 @@ const claimsSchema = new mongoose.Schema({
         index: true
     },
     approvedBy: String,
-    approvedOn: Date
+    approvedOn: Date,
+    comments: [
+        {
+            comment: String,
+            by: String,
+            on: Date
+        }
+    ]
+
+
 }, opts)
 const typeDesc = {
     'CCT': 'Travel',

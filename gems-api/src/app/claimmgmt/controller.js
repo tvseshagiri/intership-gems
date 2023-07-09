@@ -71,10 +71,33 @@ async function getUnsettledClaimsByDivision(req, res, next) {
     }
 }
 
+async function updateClaim(req, res, next) {
+    try {
+
+        let claimFormData = req.body;
+
+        if (req.user.role === 'BudgetOwner' && claimFormData.owner.email != req.user.email) {
+            await service.updateClaimForApprover(claimFormData, req.user.email);
+        } else {
+            await service.updateClaim(claimFormData);
+        }
+        res.status(200).end()
+
+    } catch (err) {
+        console.log('Error while Updating claim' + err.message)
+        if (err.message === 'No Claim with the specified ID') {
+            res.status(404).send(err.message);
+        } else {
+            next(err)
+        }
+    }
+}
+
 module.exports = {
     getClaims,
     saveClaim,
     deleteClaim,
     getClaimById,
-    getUnsettledClaimsByDivision
+    getUnsettledClaimsByDivision,
+    updateClaim
 }
