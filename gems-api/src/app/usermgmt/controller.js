@@ -9,13 +9,19 @@ async function login(req, res, next) {
 
     const { username, password } = req.body;
 
-    const user = await service.validateUser(username, password);
-
-    if (user) {
-        res.json({ user, token: generateAccessToken(user) })
-    } else {
-        res.status(401).json({ message: 'Invalid Credentials' });
+    try {
+        const user = await service.validateUser(username, password);
+        if (user) {
+            res.json({ user, token: generateAccessToken(user) })
+        } else {
+            res.status(401).json({ message: 'Invalid Credentials' });
+        }
+    } catch (e) {
+        console.error('Error while validating user' + e.message);
+        res.status(500).send('Error while processing request')
     }
+
+
 }
 
 

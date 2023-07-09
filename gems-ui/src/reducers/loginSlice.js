@@ -23,7 +23,7 @@ export const validateUser = createAsyncThunk(
     }
 )
 
-export const loginSlice = createSlice({
+const loginSlice = createSlice({
     name: 'login',
     initialState,
     reducers: {
@@ -50,8 +50,11 @@ export const loginSlice = createSlice({
             localStorage.setItem('token', action.payload.token)
 
         }).addCase(validateUser.rejected, (state, action) => {
-            state.message = 'Invalid Credentials'
-            console.log(action.payload);
+            if (action.error.code === 'ERR_BAD_RESPONSE') {
+                state.message = 'Error while processing request'
+            } else {
+                state.message = 'Invalid Credentials'
+            }
         })
     }
 })
