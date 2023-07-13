@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { messageSelector, resetMessage, validateUser, setMessage } from '../reducers/loginSlice'
 
-import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
+import { Grid, Paper, Avatar, TextField, Button, Typography, Link, Alert } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -37,9 +37,9 @@ const Login = () => {
                     <h2>Sign In</h2>
                 </Grid>
                 {message &&
-                    <h2>{message}</h2>
+                    <Alert severity="error">{message}</Alert>
                 }
-                <TextField label='Username' value={username} onChange={(e) => { setUsername(e.target.value) }} placeholder='Enter username' variant="outlined" fullWidth required />
+                <TextField label='Username' value={username} onChange={(e) => { setUsername(e.target.value) }} placeholder='Enter username' variant="outlined" fullWidth required type='email' />
                 <TextField label='Password' onChange={(e) => setPassword(e.target.value)} value={password} placeholder='Enter password' type='password' variant="outlined" fullWidth required />
                 <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth onClick={() => submitLoign()}>Sign in</Button>
             </Paper>

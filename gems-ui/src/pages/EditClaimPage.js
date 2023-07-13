@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { updateClaim } from "../reducers/claimSlice";
+import format from "date-fns/format";
 
 export function EditClaimPage() {
 
@@ -141,7 +142,7 @@ export function EditClaimPage() {
                                 <TableCell>
                                     {c.by}
                                 </TableCell>
-                                <TableCell align="right">{c.on}</TableCell>
+                                <TableCell align="right">{format(Date(c.on), 'dd-MMM-yyy')}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -215,7 +216,7 @@ export function EditClaimPage() {
                         {getStatusSection()}
                         <Grid item xs={12} >
                             <Typography >
-                                Generated On: {claim.generatedOn}
+                                Generated On: {format(new Date(claim.generatedOn), 'dd-MMM-yyy')}
                             </Typography>
                         </Grid>
                         <Grid item xs={12} >

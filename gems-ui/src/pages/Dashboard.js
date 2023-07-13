@@ -5,13 +5,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteClaim, getClaims, getUnsettledClaims } from '../reducers/claimSlice';
 import { useState } from 'react';
 import { userInfoSelector } from "../reducers/loginSlice";
+import format from 'date-fns/format'
 
 const columns = [
     { field: 'number', headerName: 'Claim Number', width: 150 },
     { field: 'typeDesc', headerName: 'Category', width: 150 },
     { field: 'subTypeDesc', headerName: 'Sub Category', width: 150 },
     { field: 'amount', headerName: 'Amount', width: 150 },
-    { field: 'generatedOn', headerName: 'Claim Date', width: 150 },
+    {
+        field: 'generatedOn', headerName: 'Created On', width: 150, renderCell: (params) => {
+            return <div className="rowitem">{format(new Date(params.row.generatedOn), 'dd-MMM-yyyy')}</div>;
+        }
+    },
     { field: 'status', headerName: 'Status', width: 150 },
     {
         field: 'owner', headerName: 'Raised By', width: 150, renderCell: (params) => {
