@@ -1,29 +1,15 @@
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { Button, Stack } from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteClaim, getClaims, getUnsettledClaims } from '../reducers/claimSlice';
-import { useState } from 'react';
+import { React, useState } from 'react';
 import { userInfoSelector } from "../reducers/loginSlice";
-import format from 'date-fns/format'
-
-const columns = [
-    { field: 'number', headerName: 'Claim Number', width: 150 },
-    { field: 'typeDesc', headerName: 'Category', width: 150 },
-    { field: 'subTypeDesc', headerName: 'Sub Category', width: 150 },
-    { field: 'amount', headerName: 'Amount', width: 150 },
-    {
-        field: 'generatedOn', headerName: 'Created On', width: 150, renderCell: (params) => {
-            return <div className="rowitem">{format(new Date(params.row.generatedOn), 'dd-MMM-yyyy')}</div>;
-        }
-    },
-    { field: 'status', headerName: 'Status', width: 150 },
-    {
-        field: 'owner', headerName: 'Raised By', width: 150, renderCell: (params) => {
-            return <div className="rowitem">{params.row.owner.firstName}, {params.row.owner.lastName}</div>;
-        }
-    },
-];
+import ClaimList from "../components/ClaimsList";
+import { useGridApiRef } from "@mui/x-data-grid";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 const Dashboard = () => {
 
@@ -44,7 +30,7 @@ const Dashboard = () => {
             alert('Please select a claim to delete');
         } else {
 
-            selectRows.forEach((row, rowId) => {
+            selectRows.forEach((row) => {
                 selectedRow = row;
             })
             if (userInfo.email != selectedRow.owner.email) {
@@ -75,7 +61,7 @@ const Dashboard = () => {
             alert('Please select a claim to delete');
         } else {
 
-            selectRows.forEach((row, rowId) => {
+            selectRows.forEach((row) => {
                 selectedRow = row;
             })
 
@@ -89,18 +75,17 @@ const Dashboard = () => {
             <h2>Dashboard</h2>
             <div style={{ height: 300, width: '100%' }}>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-                    <Button size="small" onClick={() => navigateToClaimPage()}>
-                        Create Claim
-                    </Button>
-                    <Button size="small" onClick={() => callEditClaim()}>
-                        Edit Claim
-                    </Button>
-                    <Button size="small" onClick={() => callDeleteClaim()}>
-                        Delete Claim
-                    </Button>
+                    <IconButton aria-label="delete" onClick={() => navigateToClaimPage()} color="primary" size="large">
+                        <AddIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" onClick={() => callEditClaim()} color="primary" size="large">
+                        <EditIcon fontSize="inherit" />
+                    </IconButton>
+                    <IconButton aria-label="delete" onClick={() => callDeleteClaim()} color="error" size="large">
+                        <DeleteIcon fontSize="inherit" />
+                    </IconButton>
                 </Stack>
-                <DataGrid rows={claims} columns={columns} apiRef={apiRef} getRowId={(row) => row._id} sx={{
-                }} />
+                <ClaimList claims={claims} apiRef={apiRef} />
             </div>
         </>
     )

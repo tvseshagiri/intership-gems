@@ -9,11 +9,13 @@ const initialState = {
         email: null,
         role: null
     },
-    message: null
+    message: null,
+    loadingStatus: null
 }
 
 export const userInfoSelector = state => state.login.userInfo;
 export const messageSelector = state => state.login.message;
+export const statusSelector = state => state.login.loadingStatus;
 
 export const validateUser = createAsyncThunk(
     'login/validateUser',
@@ -36,12 +38,13 @@ const loginSlice = createSlice({
         logoutUser(state) {
             state.userInfo = null;
             state.message = null;
+            state.loadingStatus = null;
             localStorage.clear();
         }
     },
     extraReducers: (builder) => {
         builder.addCase(validateUser.fulfilled, (state, action) => {
-
+            state.loadingStatus = 'success'
             state.userInfo.email = action.payload.user.email;
             state.userInfo.role = action.payload.user.role;
             state.userInfo.firstName = action.payload.user.firstName;
@@ -50,11 +53,14 @@ const loginSlice = createSlice({
             localStorage.setItem('token', action.payload.token)
 
         }).addCase(validateUser.rejected, (state, action) => {
+            state.loadingStatus = 'error'
             if (action.error.code === 'ERR_BAD_RESPONSE') {
                 state.message = 'Error while processing request'
             } else {
                 state.message = 'Invalid Credentials'
             }
+        }).addCase(validateUser.pending, (state) => {
+            state.loadingStatus = 'pending'
         })
     }
 })

@@ -2,6 +2,7 @@ import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { logoutUser, userInfoSelector } from "../reducers/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 export function Header() {
 

@@ -1,5 +1,5 @@
 import { Container, Paper, InputLabel, MenuItem, Select, Typography, Grid, TextField, Button } from "@mui/material"
-import { useState } from "react";
+import { React, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { userInfoSelector } from "../reducers/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { updateClaim } from "../reducers/claimSlice";
 import format from "date-fns/format";
 
@@ -19,6 +18,7 @@ export function EditClaimPage() {
     const [comment, setComment] = useState('')
     const navigate = useNavigate();
     const userInfo = useSelector(userInfoSelector)
+    // eslint-disable-next-line no-unused-vars
     const [type, setType] = useState();
     const dispatch = useDispatch()
     const [message, setMessage] = useState()
@@ -35,9 +35,9 @@ export function EditClaimPage() {
     }
 
     function generateSubCat() {
-        if (subCategories.hasOwnProperty(claim.type)) {
+        if (Object.prototype.hasOwnProperty.call(subCategories, claim.type)) {
             const options = subCategories[claim.type][0].map((val, i) => {
-                return <MenuItem value={val}>{subCategories[claim.type][1][i]}</MenuItem>
+                return <MenuItem key={subCategories[claim.type][1][i]} value={val}>{subCategories[claim.type][1][i]}</MenuItem>
             })
             return options;
         }
@@ -133,7 +133,7 @@ export function EditClaimPage() {
                     </TableHead>
                     <TableBody>
                         {claim.comments.map((c) => (
-                            <TableRow
+                            <TableRow key={c._id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell>
